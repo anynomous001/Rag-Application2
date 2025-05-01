@@ -33,8 +33,7 @@ documents = [
         "pageContent": text,
         "metadata": {
             "id": str(index),          
-            "chunkIndex": index,
-        }
+            "chunkIndex": index        }
     }
     for index, text in enumerate(texts)
 ]
@@ -43,13 +42,36 @@ documents = [
 vector_store.add_documents(documents=texts)
 
 retriever= vector_store.as_retriever(
-    search_kwargs={"k": 5},
+    search_kwargs={"k": 2},
     search_type="similarity",
     search_score=True,
 )
-query = "how to get rich?"
-docs = retriever.invoke(query)
 
+def query_loop():
+    print("Welcome to the RAG system. Type 'quit' to exit.\n")
+    while True:
+        try:
+            query = input("\nEnter your question: ")
+            if query.lower() == 'quit':
+                print("Exiting...")
+                break
+            if not query.strip():
+                continue
+                
+            # Process query
+            docs = retriever.invoke(query)
+            
+            # Display results
+            print(f"\nResults for: '{query}'")
+            for i, result in enumerate(docs, 1):
+                print(f"\n{'='*40} Result {i} {'='*40}")
+                print(f"Page {result.metadata.get('page', 'N/A')}")
+                print(f"\n{result.page_content}\n")
+                
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            break
 
-for result in docs:
-    print(result)
+if __name__ == "__main__":
+    query_loop()
+    
