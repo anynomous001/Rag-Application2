@@ -8,6 +8,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from langchain_qdrant import QdrantVectorStore
+
+import os
 
 
 
@@ -34,10 +37,20 @@ texts = text_splitter.split_documents(docs)
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
 
-vector_store = Chroma(
+# vector_store = Chroma(
+#     collection_name="RAG-2",
+#     embedding_function=embeddings
+# )
+
+vector_store = QdrantVectorStore.from_documents(
+    texts,
+    embeddings,
+    url=os.getenv("QDRANT_URL"),
+    prefer_grpc=True,
+    api_key=os.getenv("QDRANT_API_KEY"),
     collection_name="RAG-2",
-    embedding_function=embeddings
 )
+
 
 documents = [
     {
@@ -50,7 +63,7 @@ documents = [
 ]
 
 
-vector_store.add_documents(documents=texts)
+# vector_store.add_documents(documents=texts)
 
 retriever= vector_store.as_retriever(
     search_kwargs={"k": 2},
