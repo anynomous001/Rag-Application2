@@ -27,7 +27,6 @@ docs = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(
  chunk_size=2000,
     chunk_overlap=100,
-
     )
 
 texts = text_splitter.split_documents(docs)
@@ -101,7 +100,8 @@ def ask():
     return jsonify({"answer": answer.content})
 
 
-
 if __name__ == '__main__':
-    app.run(port=5328)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5328)
+
     

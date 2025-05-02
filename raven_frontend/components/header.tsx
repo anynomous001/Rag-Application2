@@ -9,8 +9,8 @@ const Header = () => {
         <header className="border-b bg-white flex justify-center">
             <div className="container flex items-center justify-between h-16">
                 <div className="flex items-center gap-2">
-                    <h1 className="text-xl font-bold tracking-tighter">Raven Chat</h1>
-                    <span className="bg-black text-white text-xs px-2 py-1 rounded-full">PDF AI</span>
+                    <h1 className="text-xl font-bold tracking-tighter">Raven</h1>
+                    <span className="bg-black text-white text-xs px-2 py-1 rounded-full">The PDF AI</span>
                 </div>
 
                 <Dialog>

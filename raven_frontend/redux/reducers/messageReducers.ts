@@ -15,7 +15,7 @@ export type MessageType = {
 const Initial_Message: MessageType[] = [{
     id: nanoid(),
     role: "Assistant",
-    message: "Hello! I'm Cal, your AI assistant. Ask me anything about Naval Ravikant's wisdom from The Almanack of Naval Ravikant.",
+    message: "Hello! I'm Raven, your AI assistant. Ask me anything about Naval Ravikant's wisdom from The Almanack of Naval Ravikant.",
     createdAt: new Date().toISOString()  // Convert Date to ISO string
 }]
 
