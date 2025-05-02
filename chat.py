@@ -19,7 +19,7 @@ CORS(app)
 
 load_dotenv()
 
-file_path = '../../../Desktop/Eric-Jorgenson_The-Almanack-of-Naval-Ravikant_Final.pdf'
+file_path = './Eric-Jorgenson_The-Almanack-of-Naval-Ravikant_Final.pdf'
 loader = PyPDFLoader(file_path)
 docs = loader.load()
 
