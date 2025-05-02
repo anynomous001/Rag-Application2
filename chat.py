@@ -45,7 +45,6 @@ vector_store = QdrantVectorStore.from_documents(
     texts,
     embeddings,
     url=os.getenv("QDRANT_URL"),
-    prefer_grpc=True,
     api_key=os.getenv("QDRANT_API_KEY"),
     collection_name="RAG-2",
 )
