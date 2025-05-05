@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Upload } from "lucide-react";
-
+import axios from "axios";
+import { useRouter } from 'next/navigation';
 
 const FileUploader = () => {
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
+    const router = useRouter();
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
@@ -22,25 +24,41 @@ const FileUploader = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
 
         if (!file) {
-            toast.error('Please upload a PDF file!')
+            toast.error('Please upload a PDF file!');
+            return; // Added return to prevent continuing
         }
 
-
         try {
-            setUploading(true)
+            setUploading(true);
 
-            //backend Call
-            new Promise(resolve => setTimeout(resolve, 2000))
-            toast.success("PDF uploaded successfully.")
+            // Create FormData and append the file
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await axios.post(
+                '/api/upload',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                }
+            );
+
+            if (response.data) {
+                toast.success("PDF uploaded successfully.");
+            }
+            console.log(response.data)
+            router.push('/chat')
         } catch (error: any) {
-            toast.error(error.message)
-            console.error(error.message)
+            console.error("Error uploading PDF:", error);
+            toast.error(error.response?.data?.error || "Failed to upload PDF. Please try again.");
         } finally {
-            setUploading(false)
-            setFile(null)
+            setUploading(false);
+            setFile(null);
         }
     }
 
