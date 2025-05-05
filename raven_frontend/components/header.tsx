@@ -2,8 +2,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
-import FileUploader from "@/components/fileuploader";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { redirect } from "next/navigation";
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { MessageType } from "@/redux/reducers/messageReducers";
 import { Copy } from "lucide-react";
@@ -21,7 +21,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             await navigator.clipboard.writeText(message.message);
             toast.success("Message copied to clipboard!");
         } catch (error) {
-            toast.error("Failed to copy message");
+            toast.error("Failed to copy message" + error);
         }
     };
 

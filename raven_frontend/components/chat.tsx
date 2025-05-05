@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { llmMessageFailure, llmMessageRequest, llmMessageSuccess } from '@/redux/actions/messageActions'
 // import QuerySubmitSection from './querySubmitSection'
-import { SendQueryAction } from '@/actions/sendQueryAction'
 import axios from 'axios'
 
 
@@ -59,7 +58,7 @@ const Chat = () => {
             );
 
             console.log(response)
-            const response2 = 'this is response'
+            // const response2 = 'this is response' demo response
             const assistantMessage: MessageType = {
                 id: nanoid(),
                 message: response.data.answer,

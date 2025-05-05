@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Upload } from "lucide-react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from 'next/navigation';
 
 const FileUploader = () => {
@@ -53,9 +53,10 @@ const FileUploader = () => {
             }
             console.log(response.data)
             router.push('/chat')
-        } catch (error: any) {
+        } catch (error) {
             console.error("Error uploading PDF:", error);
-            toast.error(error.response?.data?.error || "Failed to upload PDF. Please try again.");
+            const axiosError = error as AxiosError<{ error: string }>;
+            toast.error(axiosError.response?.data?.error || "Failed to upload PDF. Please try again.");
         } finally {
             setUploading(false);
             setFile(null);
