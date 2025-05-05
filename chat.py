@@ -48,28 +48,28 @@ try:
     logger.info("Setting up Qdrant client...")
     client = QdrantClient(":memory:")
 
-    logger.info("Creating collection...")
-    client.create_collection(
-        collection_name="RAG-2",
-        vectors_config=VectorParams(
-            size=768,
-            distance=Distance.COSINE
-        ),
-    )
+    # logger.info("Creating collection...")
+    # client.create_collection(
+    #     collection_name="RAG-2",
+    #     vectors_config=VectorParams(
+    #         size=768,
+    #         distance=Distance.COSINE
+    #     ),
+    # )
 
-    logger.info("Creating vector store...")
-    vector_store = QdrantVectorStore(
-        client=client,
-        collection_name="RAG-2",
-        embedding=embeddings,
-    )
+    # logger.info("Creating vector store...")
+    # vector_store = QdrantVectorStore(
+    #     client=client,
+    #     collection_name="RAG-2",
+    #     embedding=embeddings,
+    # )
 
-    logger.info("Setting up retriever...")
-    retriever = vector_store.as_retriever(
-    search_kwargs={"k": 2},
-    search_type="similarity",
-    search_score=True,
-    )
+    # logger.info("Setting up retriever...")
+    # retriever = vector_store.as_retriever(
+    # search_kwargs={"k": 2},
+    # search_type="similarity",
+    # search_score=True,
+    # )
           
 
     logger.info("Initializing LLM...")
@@ -147,11 +147,34 @@ def process_pdf(file_path):
         logger.info("Adding documents to vector store...")
         logs = vector_store.add_documents(documents=texts)
         print(logs)
+
+        logger.info("Creating vector store...")
+
+        vector_store = QdrantVectorStore.from_documents(
+        docs=texts,
+        embeddings=embeddings,
+        url=os.getenv("QDRANT_URL"),
+        prefer_grpc=True,
+        api_key=os.getenv("QDRANT_API_KEY"),
+        collection_name="rag-{collection_name}",
+        )
+
+        print({vector_store})
+        logger.info("Setting up retriever...")
+
+        retriever = vector_store.as_retriever(
+        search_kwargs={"k": 2},
+        search_type="similarity",
+        search_score=True,
+        )
+
+
+        logger.info("Retriever setup complete.")
+        logger.info("Documents added to vector store successfully.")
 #         logger.info("Added documents to vector store...")
-# logger.info("Adding documents to vector store...")
+#         logger.info("Adding documents to vector store...")
 #         logs = vector_store.add_documents(documents=texts)
 #         print(logs)
-        logger.info("Added documents to vector store...")
         os.remove(file_path)  # Remove the file after processing
         logger.info(f"File {file_path} processed and removed successfully.")
 
