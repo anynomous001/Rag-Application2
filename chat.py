@@ -126,7 +126,7 @@ def ask():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def process_pdf(file_path):
+def process_pdf(file_path,filename):
     global vector_store, retriever
     try:
         logger.info(f"Loading PDF file from {file_path}...")
@@ -146,9 +146,10 @@ def process_pdf(file_path):
         documents=texts,
         embedding=embeddings,
         url=os.getenv("QDRANT_URL"),
-        prefer_grpc=True,
+        prefer_grpc=False, 
+        timeout=60,       
         api_key=os.getenv("QDRANT_API_KEY"),
-        collection_name="rag-2",
+        collection_name={filename},
         )
         print({vector_store})
 
@@ -194,7 +195,7 @@ def upload_file():
 
             print(filepath)
             
-            if process_pdf(filepath):
+            if process_pdf(filepath,filename):
                 return jsonify({'message': 'File successfully uploaded and processed'}), 200
             else:
                 return jsonify({'error': 'Error processing the PDF'}), 500

@@ -112,7 +112,7 @@ const Chat = () => {
                         onKeyDown={handleKeyDown}
                         placeholder="Ask a question about Naval Ravikant's wisdom..."
                         className={cn(
-                            "flex-1 resize-none max-h-36 min-h-10",
+                            "flex-1 resize-none max-h-46 min-h-20 p-2",
                             input.split("\n").length > 1 ? "h-24" : "h-10"
                         )}
                         rows={1}
