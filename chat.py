@@ -27,7 +27,7 @@ app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["https://your-frontend-domain.onrender.com", "http://localhost:3000"],
+        "origins": ["https://your-frontend-domain.onrender.com", "http://localhost:3001"],
         "methods": ["POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
@@ -109,10 +109,6 @@ def ask():
             ("human", "{query}"),
         ])
 
-
-
-
-
         retrievedDocs = retriever.invoke(query)
         context = "\n\n".join(doc.page_content for doc in retrievedDocs)
         
@@ -143,23 +139,22 @@ def process_pdf(file_path):
             chunk_overlap=100,
         )
         texts = text_splitter.split_documents(docs)
-        
-        logger.info("Adding documents to vector store...")
-        logs = vector_store.add_documents(documents=texts)
-        print(logs)
 
         logger.info("Creating vector store...")
 
         vector_store = QdrantVectorStore.from_documents(
-        docs=texts,
-        embeddings=embeddings,
+        documents=texts,
+        embedding=embeddings,
         url=os.getenv("QDRANT_URL"),
         prefer_grpc=True,
         api_key=os.getenv("QDRANT_API_KEY"),
-        collection_name="rag-{collection_name}",
+        collection_name="rag-2",
         )
-
         print({vector_store})
+
+        # logger.info("Adding documents to vector store...")
+        # logs = vector_store.add_documents(documents=texts)
+        # logger.info("Added documents to vector store...")
         logger.info("Setting up retriever...")
 
         retriever = vector_store.as_retriever(
@@ -170,10 +165,7 @@ def process_pdf(file_path):
 
 
         logger.info("Retriever setup complete.")
-        logger.info("Documents added to vector store successfully.")
-#         logger.info("Added documents to vector store...")
-#         logger.info("Adding documents to vector store...")
-#         logs = vector_store.add_documents(documents=texts)
+        # logger.info("Documents added to vector store successfully.")
 #         print(logs)
         os.remove(file_path)  # Remove the file after processing
         logger.info(f"File {file_path} processed and removed successfully.")
